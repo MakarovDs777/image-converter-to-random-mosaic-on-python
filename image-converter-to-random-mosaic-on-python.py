@@ -19,19 +19,19 @@ def load_image(image_path):
 def shuffle_image(image_path, output_image_path):
     # Загружаем изображение
     image = load_image(image_path)
-    
+
     # Проверка на успешность загрузки изображения
     if image is None:
         print(f"Не удалось загрузить изображение: {image_path}")
         return
 
     # Проверьте количество каналов (должно быть 3 для RGB)
-    if len(image.shape) < 3 or image.shape[2] != 3:
+    if len(image.shape) < 3 or image.shape[2]!= 3:
         print(f"Неподдерживаемый формат изображения: {image_path}. Изображение должно иметь 3 канала (RGB).")
         return
 
     height, width, _ = image.shape
-    
+
     # Убедимся, что при делении на 2, мы корректно разбиваем на 4 плитки
     h, w = height // 2, width // 2
 
@@ -49,8 +49,11 @@ def shuffle_image(image_path, output_image_path):
     # Собираем плитки обратно в одно изображение
     shuffled_image = np.vstack((np.hstack((tiles[0], tiles[1])), np.hstack((tiles[2], tiles[3]))))
 
+    # Преобразуем изображение из формата RGB в формат BGR перед сохранением
+    shuffled_image_bgr = cv2.cvtColor(shuffled_image, cv2.COLOR_RGB2BGR)
+
     # Сохраняем перемешанное изображение
-    cv2.imwrite(output_image_path, shuffled_image)
+    cv2.imwrite(output_image_path, shuffled_image_bgr)
     print(f"Создано перемешанное изображение: {output_image_path}")
 
 def select_image():
